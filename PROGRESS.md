@@ -31,3 +31,13 @@
 - [ ] Step 1: log in, screenshot dashboard, enumerate installed apps via /odoo/apps, write `docs/00-installed-apps-map.md` — not started, blocked on login.
 - [ ] Step 2: per-app deep documentation (all apps) — not started, blocked on login.
 - [ ] `docs/SUMMARY.md` final cross-app synthesis — not started.
+
+## 2026-07-20 (resumed again) -- BLOCKER RESOLVED via the exact path this file's own prior analysis recommended
+
+The Owner opened `https://rajatagarwal.odoo.com/odoo/crm` in their own real Chrome browser and confirmed they were logged in. Rather than retry the sandboxed-Playwright login flow (conclusively proven above to be structurally impossible -- the PAT/Privacy-Pass gate has nothing to do with fingerprint spoofing), this session used **Claude in Chrome** (a different automation surface: drives the Owner's actual real Chrome browser, not a sandboxed headless instance) to open a *new tab* and navigate directly to the same URL. The login session carried over automatically, because Odoo's session cookie is stored at the browser-profile level, not per-tab -- **this is functionally equivalent to recommendation (a) above** ("the Owner logs in once from their own real browser/device... so this environment can inject it directly and skip the Turnstile-gated login page entirely"), just achieved via a different mechanism (riding the same real browser process instead of manually extracting and injecting a cookie value).
+
+**Confirms the root-cause diagnosis above was correct**: no fingerprint patch was needed or attempted this time -- the whole PAT-gated Turnstile challenge was simply never encountered, because no new login occurred; an already-valid session was reused.
+
+First real output produced: `docs/crm/fields.md` (Odoo CRM module: Pipeline/Kanban+List views, full Opportunity form fields, Configuration menu structure). This account has essentially zero real business data (the Kanban pipeline's ~12-card appearance is decorative onboarding artwork, not seeded demo data like Zoho's account had -- see that doc's own "Important finding" section) -- so the *documentation* value here is entirely about the CRM module's field/screen/config structure, not about any real business records.
+
+Next: continue this same real-session approach for other Odoo apps (the top-level `/odoo/apps` dashboard was not yet visited -- this pass went straight to the CRM URL the Owner provided).
